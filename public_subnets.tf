@@ -3,7 +3,7 @@ resource "aws_subnet" "public_aws_subnet_1a" {
   cidr_block        = cidrsubnet(var.cidr_block, 8, 4)
   availability_zone = "${data.aws_region.main.name}a"
   tags = {
-    Name = format("%s-public-1a", var.project_name)
+    Name                     = format("%s-public-1a", var.project_name)
     "kubernetes.io/role/elb" = var.tag_public_subnets
   }
 }
@@ -35,18 +35,18 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name                     = format("%s-igw", var.project_name)
+    Name = format("%s-igw", var.project_name)
   }
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
-  depends_on = [ aws_internet_gateway.main ]
+  vpc_id     = aws_vpc.main.id
+  depends_on = [aws_internet_gateway.main]
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.main.id
-  
-} 
+
+  }
   tags = {
     Name = format("%s-public", var.project_name)
   }
