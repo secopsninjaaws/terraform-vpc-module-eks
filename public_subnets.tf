@@ -39,6 +39,19 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+  depends_on = [ aws_internet_gateway.main ]
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  
+} 
+  tags = {
+    Name = format("%s-public", var.project_name)
+  }
+}
+
 resource "aws_route_table_association" "main_public_1a" {
   subnet_id      = aws_subnet.public_aws_subnet_1a.id
   route_table_id = aws_route_table.public.id
