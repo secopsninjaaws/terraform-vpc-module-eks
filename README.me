@@ -1,4 +1,4 @@
-# Módulo Terraform - VPC para Kubernetes na AWS
+# 🌐 Módulo Terraform - VPC para Kubernetes na AWS
 
 Este módulo Terraform cria uma **VPC** configurada para hospedar um cluster **Kubernetes** na AWS. Ele inclui a configuração de **subnets públicas e privadas**, um **Internet Gateway**, um **NAT Gateway** e tabelas de rotas para permitir o tráfego apropriado entre os componentes do cluster Kubernetes.
 
@@ -52,12 +52,12 @@ Cria três subnets privadas em diferentes zonas de disponibilidade:
 
 ### ✅ **Tabelas de Rotas**
 - Cria e associa tabelas de rotas para permitir o tráfego entre os recursos:
-  - Subnets públicas → acesso à internet via Internet Gateway.
-  - Subnets privadas → acesso à internet via NAT Gateway.
+  - **Subnets públicas** → acesso à internet via Internet Gateway.
+  - **Subnets privadas** → acesso à internet via NAT Gateway.
 
 ---
 
-## 📥 **Variáveis de Entrada**
+## 🛠️ **Variáveis de Entrada**
 | Nome | Tipo | Descrição | Exemplo |
 |-------|------|-----------|---------|
 | `cidr_block` | `string` | Bloco CIDR para a VPC | `"10.0.0.0/16"` |
