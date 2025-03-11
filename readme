@@ -1,0 +1,91 @@
+# Módulo Terraform - VPC para Kubernetes na AWS
+
+Este módulo Terraform cria uma **VPC** configurada para hospedar um cluster **Kubernetes** na AWS. Ele inclui a configuração de **subnets públicas e privadas**, um **Internet Gateway**, um **NAT Gateway** e tabelas de rotas para permitir o tráfego apropriado entre os componentes do cluster Kubernetes.
+
+---
+
+## 📚 **Recursos Criados**
+Este módulo cria os seguintes recursos na AWS:
+
+### ✅ **VPC**
+- Cria uma VPC com o bloco CIDR definido na variável `cidr_block`.
+- Adiciona tags para identificação dos recursos.
+
+---
+
+### ✅ **Subnets Públicas**
+Cria três subnets públicas em diferentes zonas de disponibilidade:
+
+| Nome | CIDR | Zona de Disponibilidade |
+|-------|------|-------------------------|
+| Public Subnet 1a | 10.0.20.0/24 | us-east-1a |
+| Public Subnet 1b | 10.0.40.0/24 | us-east-1b |
+| Public Subnet 1c | 10.0.60.0/24 | us-east-1c |
+
+➡️ As subnets públicas são configuradas com a tag `kubernetes.io/role/elb` para permitir o uso por Load Balancers externos no Kubernetes.
+
+---
+
+### ✅ **Subnets Privadas**
+Cria três subnets privadas em diferentes zonas de disponibilidade:
+
+| Nome | CIDR | Zona de Disponibilidade |
+|-------|------|-------------------------|
+| Private Subnet 1a | 10.0.75.0/24 | us-east-1a |
+| Private Subnet 1b | 10.0.85.0/24 | us-east-1b |
+| Private Subnet 1c | 10.0.95.0/24 | us-east-1c |
+
+➡️ As subnets privadas são configuradas com a tag `kubernetes.io/role/internal-elb` para permitir o uso por Load Balancers internos no Kubernetes.
+
+---
+
+### ✅ **Internet Gateway**
+- Cria um Internet Gateway para permitir o acesso à internet a partir das subnets públicas.
+
+---
+
+### ✅ **NAT Gateway**
+- Cria um **Elastic IP**.
+- Cria um **NAT Gateway** em uma subnet pública para permitir que as subnets privadas acessem a internet para atualizações ou downloads.
+
+---
+
+### ✅ **Tabelas de Rotas**
+- Cria e associa tabelas de rotas para permitir o tráfego entre os recursos:
+  - Subnets públicas → acesso à internet via Internet Gateway.
+  - Subnets privadas → acesso à internet via NAT Gateway.
+
+---
+
+## 📥 **Variáveis de Entrada**
+| Nome | Tipo | Descrição | Exemplo |
+|-------|------|-----------|---------|
+| `cidr_block` | `string` | Bloco CIDR para a VPC | `"10.0.0.0/16"` |
+| `project_name` | `string` | Nome do projeto para nomeação dos recursos | `"my-project"` |
+| `tag_public_subnets` | `string` | Tag para associar às subnets públicas no Kubernetes | `"1"` |
+| `tag_private_subnets` | `string` | Tag para associar às subnets privadas no Kubernetes | `"1"` |
+
+---
+
+## 📤 **Outputs**
+| Nome | Descrição |
+|-------|-----------|
+| `vpc_id` | ID da VPC criada |
+| `public_subnets` | IDs das subnets públicas criadas |
+| `private_subnets` | IDs das subnets privadas criadas |
+| `internet_gateway_id` | ID do Internet Gateway criado |
+| `nat_gateway_id` | ID do NAT Gateway criado |
+
+---
+
+## 🚀 **Exemplo de Uso**
+Exemplo de configuração para criar a VPC usando este módulo:
+
+```hcl
+module "k8s_vpc" {
+  source               = "./vpc-kubernetes"
+  cidr_block           = "10.0.0.0/16"
+  project_name         = "my-cluster"
+  tag_public_subnets   = "1"
+  tag_private_subnets  = "1"
+}
