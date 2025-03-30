@@ -11,6 +11,20 @@ variable "project_name" {
 
 }
 
+variable "number_of_subnets" {
+  description = "The number of subnets to create"
+  type        = number
+  default     = 3
+
+}
+
+variable "cluster_name" {
+  description = "The name of the EKS cluster"
+  type        = string
+  default     = "Lucas-EKS-Module"
+
+}
+
 variable "tag_private_subnets" {
   description = "The tag for private subnets"
   type        = number
