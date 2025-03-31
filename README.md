@@ -65,7 +65,7 @@ locals {
 }
 
 module "main_vpc" {
-  source  = "app.terraform.io/secopsninjaaws/module-eks/vpc"
+  source  = "secopsninjaaws/module-eks/vpc"
   number_of_subnets = local.vpc_variables.number_of_subnets
   cidr_block = local.vpc_variables.cidr_block
 
