@@ -56,18 +56,27 @@ Essas saídas podem ser referenciadas em outros módulos ou recursos do Terrafor
 ### Uso Básico
 
 ```hcl
-module "eks_vpc" {
-  source = "./modules/vpc"
-
-  cidr_block    = "10.0.0.0/16"
-  project_name  = "my-eks-project"
-  cluster_name  = "production-cluster"
+locals {
+  eks_variables = {
+    cluster_name   = "Lucas-EKS-Module"
+    desired_size   = 1
+    max_size       = 2
+    min_size       = 1
+    instance_types = ["t3.medium"]
+    capacity_type  = "SPOT"
+    disk_size      = 50
+  }
 }
 
-output "vpc_id" {
-  value = module.eks_vpc.vpc_id
+module "eks" {
+  source          = "./modules/eks"
+  private_subnets = 
+  desired_size    = local.eks_variables.desired_size
+  max_size        = local.eks_variables.max_size
+  min_size        = local.eks_variables.min_size
+  instance_types  = local.eks_variables.instance_types
+  capacity_type   = local.eks_variables.capacity_type
+  disk_size       = local.eks_variables.disk_size
 }
 
-output "private_subnet_ids" {
-  value = module.eks_vpc.private_subnets
-}
+```
