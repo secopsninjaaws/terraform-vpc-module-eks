@@ -57,26 +57,17 @@ Essas saídas podem ser referenciadas em outros módulos ou recursos do Terrafor
 
 ```hcl
 locals {
-  eks_variables = {
-    cluster_name   = "Lucas-EKS-Module"
-    desired_size   = 1
-    max_size       = 2
-    min_size       = 1
-    instance_types = ["t3.medium"]
-    capacity_type  = "SPOT"
-    disk_size      = 50
+  vpc_variables = {
+    cidr_block        = "10.0.0.0/16"
+    number_of_subnets = 4
+
   }
 }
 
-module "eks" {
-  source          = "./modules/eks"
-  private_subnets = 
-  desired_size    = local.eks_variables.desired_size
-  max_size        = local.eks_variables.max_size
-  min_size        = local.eks_variables.min_size
-  instance_types  = local.eks_variables.instance_types
-  capacity_type   = local.eks_variables.capacity_type
-  disk_size       = local.eks_variables.disk_size
-}
+module "main_vpc" {
+  source  = "app.terraform.io/secopsninjaaws/module-eks/vpc"
+  number_of_subnets = local.vpc_variables.number_of_subnets
+  cidr_block = local.vpc_variables.cidr_block
 
+}
 ```
